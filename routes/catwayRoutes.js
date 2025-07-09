@@ -1,12 +1,12 @@
 const express = require ('express');
 const router = express.Router()
 
-const service = require ('../services/catways');
+const controller = require ('../controllers/catwayController');
 
-router.get('/', service.getAll);
-router.get('/:id', service.getById);
-router.post('/', service.add)
-router.put('/:id', service.update);
-router.delete('/:id', service.delete);
+router.get('/', controller.getAll);
+router.get('/:id', controller.getById);
+router.post('/', controller.add)
+router.put('/:id', controller.update);
+router.delete('/:id', controller.delete);
 
 module.exports = router;
