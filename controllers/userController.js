@@ -1,7 +1,15 @@
 const User = require ('../models/User')
 const bcrypt = require('bcrypt')
+/**
+ * Récupère la liste de tous les utilisateurs sans leurs mots de pass
+ * 
+ * @param {Object} req - Objet requête Express.
+ * @param {Object} res - Objet réponse Express.
+ * @param {Function} next - Middleware suivant.
+ * 
+ * @returns {JSON} Liste des utilisateurs ou erreur 500.
+ */
 
-// Liste tous les utilisateurs (Sans le mot de passe)
 exports.getAll = async (req, res, next) => {
   try {
     const users = await User.find().select('-password');
@@ -11,7 +19,18 @@ exports.getAll = async (req, res, next) => {
   }
 };
 
-// Récupérer un utilisateur par email (Sans le mot de passe)
+
+/**
+ * Récupère un utilisateur par email sans mot de passe.
+ * 
+ * @param {Object} req  - Objet requête Express.
+ * @param {Object} req.params - Paramètre de la requête.
+ * @param {string} req.params.email - Email de l'utilisateur à chercher.
+ * @param {Objet} res  - Objet réponse Express.
+ * @param {Function} next - Middleware suivant.
+ * 
+ * @returns {JSON} Utilisateur trouvé ou message d'erreur 404 / 500.
+ */
 exports.getByEmail = async (req, res, next) => {
     
     try {
@@ -26,45 +45,73 @@ exports.getByEmail = async (req, res, next) => {
     }
 };
 
-// Créer un utilisateur avec le hask du mot de passe
+/**
+ * 
+ * Créer un utilisateur avec le hask du mot de passe 
+ * @param {Object} req  - Objet requête Express.
+ * @param {Object} req.body - Données envoyées.
+ * @param {string} req.body.usernam - Nom d'utilisateur.
+ * @param {string} req.body.email - Email unique de l'utilisateur.
+ * @param {string} req.body.password - Mot de passe en clair.
+ * @param {Object} res -Objet réponse Express.
+ * @param {Function} next - Middleware suivant.
+ *  
+ * @returns {JSON} Utilisateur crée (sans le mot de passe) ou erreur 409/500.
+ */
 exports.add = async (req, res, next) => {
-    try {
-        const hashedPassword = await bcrypt.hash(req.body.password, 10);
-
-        const user = await User.create({
+        const temp = {
             username  : req.body.username,
             email     : req.body.email,
             password  : req.body.password
-        });
-        
-        return res.status(201).json(user)
-// Aujout du code 409 gestion des emails dans le cas ou celui ci serais déjà utilisé.
-    } catch (error) {
+        };
+        try {
+// Hashage du mot de passe.
+            temp.password = await bcrypt.hash(temp.password, 10);
+            let user = await User.create(temp);
+
+            //Ne pas renvoyer le mot de passe
+            user = user.toObject();
+            delete user.password;
+
+            return res.status(201).json(user);
+        } catch (error) {
         if (error.code === 11000) {
          return res.status(409).json({error: 'email already used'});
         }
         return res.status(500).json(error);
     }
 };
-        
 
-// Mettre à jour un utilisateur par email 
+/**
+ * Permet de mettre à jour un utilisateur par email.
+ * 
+ * @param {Object} req - Objet requête Express.
+ * @param {Object} req.params - Paramètre de la requête.
+ * @param {string} req.params.email - Email de l'utilisateur à modifier.
+ * @param {Object} req.body - Données à modifier.
+ * @param {string} [req.body.username] - Nouveau mot de passe.
+ * @param {string} [req.body.email] - Nouvel email.
+ * @param {string} [req.body.password] - Nouveau mot de passe.
+ * @param {Object} res - Objet réponse Express.
+ * @param {Function} next -Middleware suivant.
+ * 
+ * @returns {JSON} Utilisateur modifié ou erreur 404 / 500.
+ */
 exports.update = async (req, res, next) => {
     const email = req.params.email;
 
-    const temp = ({
+    const temp = {
         username   : req.body.username,
         email      : req.body.email,
         password   : req.body.password 
-    });
+    };
     
     try {  
         if (temp.password) {
             temp.password = await bcrypt.hash(temp.password, 10)
         };
-    //Hash du mots de passe , si il est fourni, lorsque celui est modifié   
 
-        const user = await User.findOne({ email });
+        let user = await User.findOne ({ email });
 
         if (user) {
             Object.keys(temp).forEach((key) => {
@@ -74,6 +121,10 @@ exports.update = async (req, res, next) => {
             });
 
             await user.save()
+            
+            user = user.toObject();
+            delete user.password;
+
             return res.status (200).json(user);
         }
 
@@ -83,7 +134,17 @@ exports.update = async (req, res, next) => {
     }
 };
 
-// Supprimer un utilisateur par email. 
+/**
+ * Supprime un utilisateur par email.
+ * 
+ * @param {Object} req - Objet requête Express.
+ * @param {Object} req.params - Paramètres de la requête.
+ * @param {string} req.params.email - Email de l'utilisateur à supprimer.
+ * @param {Object} res  - Objet réponse Express.
+ * @param {Function} next - Middleware suivant.
+ *  
+ * @returns {JSON} Message de succès ou erreur 500. 
+ */
 
 exports.delete = async (req, res, next) => {
     const email = req.params.email
