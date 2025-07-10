@@ -22,6 +22,6 @@ const ReservationSchema = new Schema({
         type     : Date,
         required : [true, 'La date de départ est nécessaire.']
     }
-});
+}, { collection: 'reservation' });
 
-module.exports = mongoose.model ('Reservation', ReservationSchema);
+module.exports = mongoose.model ('Reservation', ReservationSchema, 'reservation');

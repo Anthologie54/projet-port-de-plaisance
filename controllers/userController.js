@@ -65,7 +65,7 @@ exports.add = async (req, res, next) => {
             password  : req.body.password
         };
         try {
-// Hashage du mot de passe.
+            // Hashage du mot de passe.
             temp.password = await bcrypt.hash(temp.password, 10);
             let user = await User.create(temp);
 
@@ -93,9 +93,9 @@ exports.add = async (req, res, next) => {
  * @param {string} [req.body.email] - Nouvel email.
  * @param {string} [req.body.password] - Nouveau mot de passe.
  * @param {Object} res - Objet réponse Express.
- * @param {Function} next -Middleware suivant.
+ * @param {Function} next - Middleware suivant.
  * 
- * @returns {JSON} Utilisateur modifié ou erreur 404 / 500.
+ * @returns {JSON} - Utilisateur modifié ou erreur 404 / 500.
  */
 exports.update = async (req, res, next) => {
     const email = req.params.email;
@@ -125,10 +125,10 @@ exports.update = async (req, res, next) => {
             user = user.toObject();
             delete user.password;
 
-            return res.status (200).json(user);
+            return res.status(200).json(user);
         }
 
-        return res.status(404).json({error :'user_not_found'});
+        return res.status(404).json({error: 'user_not_found'});
     } catch (error) {
         return res.status(500).json(error);
     }
@@ -143,7 +143,7 @@ exports.update = async (req, res, next) => {
  * @param {Object} res  - Objet réponse Express.
  * @param {Function} next - Middleware suivant.
  *  
- * @returns {JSON} Message de succès ou erreur 500. 
+ * @returns {JSON} - Message de succès ou erreur 500. 
  */
 
 exports.delete = async (req, res, next) => {
@@ -151,8 +151,8 @@ exports.delete = async (req, res, next) => {
 
     try{
         await User.deleteOne({ email });
-        return res.status (200).json({message: 'delete_ok'})
+        return res.status(200).json({message: 'delete_ok'})
     } catch (error) {
-        return res.status (500).json(error);
+        return res.status(500).json(error);
     }
 };
