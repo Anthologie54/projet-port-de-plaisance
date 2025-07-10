@@ -6,7 +6,7 @@ router.get('/', (req, res) => {
     });
 
 router.use('/users', require('./userRoutes'));
-//router.use('/catways', require('./catwayRoutes'));
+router.use('/catways', require('./catwayRoutes'));
 //router.use('/reservations', require ('./reservationRoutes'))
 
 module.exports = router;
