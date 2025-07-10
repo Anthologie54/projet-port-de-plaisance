@@ -1,9 +1,21 @@
 const User = require ('../models/User')
+const bcrypt = require('bcrypt')
+
+// Liste tous les utilisateurs (Sans le mot de passe)
+exports.getAll = async (req, res, next) => {
+  try {
+    const users = await User.find().select('-password');
+    return res.status(200).json(users);
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+};
+
+// Récupérer un utilisateur par email (Sans le mot de passe)
 exports.getByEmail = async (req, res, next) => {
     
     try {
-        let user = await User.findOne({email: req.params.email});
-
+        let user = await User.findOne({email: req.params.email}).select('-password');
         if (user) {
             return res.status(200).json(user);
         }
@@ -12,48 +24,54 @@ exports.getByEmail = async (req, res, next) => {
     } catch (error) {
         return res.status(500).json(error)
     }
-}
+};
 
+// Créer un utilisateur avec le hask du mot de passe
 exports.add = async (req, res, next) => {
-
-    const temp = ({
-        username  : req.body.username,
-        email     : req.body.email,
-        password  : req.body.password
-    });
-
     try {
-        let user = await User.create(temp);
+        const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
-        return res.status(201).json(user);
+        const user = await User.create({
+            username  : req.body.username,
+            email     : req.body.email,
+            password  : req.body.password
+        });
+        
+        return res.status(201).json(user)
+// Aujout du code 409 gestion des emails dans le cas ou celui ci serais déjà utilisé.
     } catch (error) {
         if (error.code === 11000) {
-            return res.status(409).json({error: 'email already used'})
+         return res.status(409).json({error: 'email already used'});
         }
         return res.status(500).json(error);
-        
-  // Code 409 gestion des emails dans le cas ou celui ci serais déjà utilisé.
-    
     }
-}
+};
+        
 
+// Mettre à jour un utilisateur par email 
 exports.update = async (req, res, next) => {
-    const id = req.params.id
+    const email = req.params.email;
+
     const temp = ({
         username   : req.body.username,
         email      : req.body.email,
-        password   : req.body.password
+        password   : req.body.password 
     });
+    
+    try {  
+        if (temp.password) {
+            temp.password = await bcrypt.hash(temp.password, 10)
+        };
+    //Hash du mots de passe , si il est fourni, lorsque celui est modifié   
 
-    try {
-        let user = await User.findOne({_id : id});
+        const user = await User.findOne({ email });
 
         if (user) {
             Object.keys(temp).forEach((key) => {
                 if (!!temp[key]) {
                     user[key] = temp[key];
                 }
-            })
+            });
 
             await user.save()
             return res.status (200).json(user);
@@ -61,18 +79,19 @@ exports.update = async (req, res, next) => {
 
         return res.status(404).json({error :'user_not_found'});
     } catch (error) {
-        return res.status(501).json(error);
+        return res.status(500).json(error);
     }
-}
+};
+
+// Supprimer un utilisateur par email. 
 
 exports.delete = async (req, res, next) => {
-    const id = req.params.id
+    const email = req.params.email
 
     try{
-        await User.deleteOne({ _id: id});
-
+        await User.deleteOne({ email });
         return res.status (200).json({message: 'delete_ok'})
     } catch (error) {
-        return res.status (501).json(error);
+        return res.status (500).json(error);
     }
-}
+};

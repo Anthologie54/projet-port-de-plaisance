@@ -1,4 +1,6 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
+
+console.log('URL_MONGO:', process.env.URL_MONGO);
 
 const clientOptions = {
     useNewUrlParser    : true,

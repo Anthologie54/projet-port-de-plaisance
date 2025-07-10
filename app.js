@@ -4,7 +4,7 @@ const logger       = require('morgan');
 const cors         = require('cors');
 
 const indexRouter  = require('./routes/index');
-const { initClientDbConnect } = require('./config/mongo');
+const { initClientDbConnection } = require('./config/mongo');
 const createError  = require ('http-errors');
 const path         = require ('path');
 
