@@ -62,7 +62,7 @@ exports.add = async (req, res, next) => {
     };
     try {
         let catway = await Catway.create(temp);
-        return res.status(201).json (catway);
+        return res.status(201).json(catway);
     } catch (error) {
         if (error.code === 11000) {
             return res.status(409).json({error: 'catway already used'});

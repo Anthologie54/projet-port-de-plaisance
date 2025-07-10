@@ -1,6 +1,8 @@
 const express = require ('express');
 const router = express.Router()
+
 const controller = require ('../controllers/catwayController');
+const reservationRoutes = require('./reservationRoutes')
 
 /**
  * @route GET /catways
@@ -36,5 +38,7 @@ router.put('/:id', controller.update);
  * @access Public
  */
 router.delete('/:id', controller.delete);
+
+router.use('/:id/reservations', reservationRoutes);
 
 module.exports = router;
