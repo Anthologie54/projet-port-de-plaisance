@@ -3,10 +3,19 @@ const router = express.Router()
 
 const controller = require ('../controllers/userController');
 
-router.get('/', controller.getAll);
+//Pour lister tous les users.
+router.get('/', controller.getAll); 
+
+//Pour récupérer les emails.
 router.get('/:email', controller.getByEmail);
-router.post('/', controller.add)
-router.put('/:email', controller.update);
-router.delete('/:email', controller.delete);
+
+// Pour Crée 
+router.post('/', controller.add) 
+
+// Pour Modifier par email
+router.put('/:email', controller.update); 
+
+// Pour Supprimer par email
+router.delete('/:email', controller.delete); 
 
 module.exports = router;
