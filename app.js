@@ -1,12 +1,18 @@
+require('dotenv').config();
+
 const express      = require('express');
 const cookieParser = require('cookie-parser');
 const logger       = require('morgan');
 const cors         = require('cors');
 
 const indexRouter  = require('./routes/index');
+const authRoutes   = require('./routes/authRoutes');
 const { initClientDbConnection } = require('./config/mongo');
 const createError  = require ('http-errors');
 const path         = require ('path');
+
+
+
 
 initClientDbConnection();
 
@@ -22,6 +28,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false}));
 app.use(cookieParser());
 
+app.use('/auth', authRoutes);
 app.use('/', indexRouter);
 
 app.use(function(req, res, next) {
