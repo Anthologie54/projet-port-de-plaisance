@@ -1,46 +1,41 @@
-/**
- * @file reservationRoutes.js
- * @description Routes pour gérer les réservations liées à un catway.
- */
-
 const express = require('express');
 const router = express.Router({ mergeParams: true });
-
 const controller = require('../controllers/reservationController');
+const { checkJWT } = require('../middlewares/authMiddleware');
 
 /**
  * @route GET /catways/:id/reservations
- * @description Récupère toutes les réservations d'un catway donné.
+ * @description Récupère toutes les réservations d'un catway
  * @access Public
  */
 router.get('/', controller.getAll);
 
 /**
  * @route GET /catways/:id/reservations/:idReservation
- * @description Récupère une réservation spécifique par son ID pour un catway donné.
+ * @description Récupère une réservation spécifique
  * @access Public
  */
 router.get('/:idReservation', controller.getById);
 
 /**
  * @route POST /catways/:id/reservations
- * @description Crée une nouvelle réservation pour un catway donné.
- * @access Public
+ * @description Crée une réservation
+ * @access Protégée
  */
-router.post('/', controller.add);
+router.post('/', checkJWT, controller.add);
 
 /**
  * @route PUT /catways/:id/reservations/:idReservation
- * @description Met à jour une réservation spécifique pour un catway donné.
- * @access Public
+ * @description Met à jour une réservation
+ * @access Protégée
  */
-router.put('/:idReservation', controller.update);
+router.put('/:idReservation', checkJWT, controller.update);
 
 /**
  * @route DELETE /catways/:id/reservations/:idReservation
- * @description Supprime une réservation spécifique pour un catway donné.
- * @access Public
+ * @description Supprime une réservation
+ * @access Protégée
  */
-router.delete('/:idReservation', controller.delete);
+router.delete('/:idReservation', checkJWT, controller.delete);
 
 module.exports = router;

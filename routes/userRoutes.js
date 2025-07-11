@@ -1,46 +1,41 @@
-/**
- * @file userRoutes.js
- * @description Routes pour gérer les utilisateurs.
- */
-
 const express = require('express');
 const router = express.Router();
-
 const controller = require('../controllers/userController');
+const { checkJWT } = require('../middlewares/authMiddleware');
 
 /**
  * @route GET /users
- * @description Récupère la liste de tous les utilisateurs (sans les mots de passe).
- * @access Public (à sécuriser plus tard)
+ * @description Récupère la liste de tous les utilisateurs (sans les mots de passe)
+ * @access Public (ou protégée si besoin)
  */
-router.get('/', controller.getAll);
+router.get('/', checkJWT, controller.getAll);
 
 /**
  * @route GET /users/:email
- * @description Récupère un utilisateur par email (sans le mot de passe).
- * @access Public (à sécuriser plus tard)
+ * @description Récupère un utilisateur par email (sans le mot de passe)
+ * @access Public (ou protégée si besoin)
  */
-router.get('/:email', controller.getByEmail);
+router.get('/:email', checkJWT, controller.getByEmail);
 
 /**
  * @route POST /users
- * @description Crée un nouvel utilisateur.
- * @access Public
+ * @description Crée un nouvel utilisateur
+ * @access Protégée
  */
-router.post('/', controller.add);
+router.post('/', checkJWT, controller.add);
 
 /**
  * @route PUT /users/:email
- * @description Met à jour un utilisateur par email.
- * @access Public (à sécuriser plus tard)
+ * @description Mettre à jour un utilisateur par email
+ * @access Protégée
  */
-router.put('/:email', controller.update);
+router.put('/:email', checkJWT, controller.update);
 
 /**
  * @route DELETE /users/:email
- * @description Supprime un utilisateur par email.
- * @access Public (à sécuriser plus tard)
+ * @description Supprime un utilisateur par email
+ * @access Protégée
  */
-router.delete('/:email', controller.delete);
+router.delete('/:email', checkJWT, controller.delete);
 
 module.exports = router;

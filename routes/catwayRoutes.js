@@ -1,53 +1,45 @@
-/**
- * @file catwayRoutes.js
- * @description Routes liées aux catways et sous-routes de réservation.
- */
-
 const express = require('express');
 const router = express.Router();
-
 const controller = require('../controllers/catwayController');
 const reservationRoutes = require('./reservationRoutes');
+const { checkJWT } = require('../middlewares/authMiddleware');
 
 /**
  * @route GET /catways
- * @description Récupère la liste de tous les catways.
+ * @description Récupère tous les catways
  * @access Public
  */
 router.get('/', controller.getAll);
 
 /**
  * @route GET /catways/:id
- * @description Récupère un catway par son ID.
+ * @description Récupère un catway par son ID
  * @access Public
  */
 router.get('/:id', controller.getById);
 
 /**
  * @route POST /catways
- * @description Crée un nouveau catway.
- * @access Public
+ * @description Crée un catway
+ * @access Protégée
  */
-router.post('/', controller.add);
+router.post('/', checkJWT, controller.add);
 
 /**
  * @route PUT /catways/:id
- * @description Met à jour un catway (seul l'état est modifiable).
- * @access Public
+ * @description Met à jour l'état d'un catway
+ * @access Protégée
  */
-router.put('/:id', controller.update);
+router.put('/:id', checkJWT, controller.update);
 
 /**
  * @route DELETE /catways/:id
- * @description Supprime un catway par son ID.
- * @access Public
+ * @description Supprime un catway
+ * @access Protégée
  */
-router.delete('/:id', controller.delete);
+router.delete('/:id', checkJWT, controller.delete);
 
-/**
- * Sous-routes pour les réservations associées à un catway.
- * Ex: /catways/:id/reservations
- */
+// Sous-routes pour les réservations liées à un catway
 router.use('/:id/reservations', reservationRoutes);
 
 module.exports = router;
