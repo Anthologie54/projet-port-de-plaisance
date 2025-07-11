@@ -1,5 +1,6 @@
-const User = require ('../models/User')
-const bcrypt = require('bcrypt')
+const User = require ('../models/User');
+const bcrypt = require('bcrypt');
+
 /**
  * Récupère la liste de tous les utilisateurs sans leurs mots de pass
  * 
@@ -64,9 +65,10 @@ exports.add = async (req, res, next) => {
             email     : req.body.email,
             password  : req.body.password
         };
+        if (!temp.password || temp.password.length < 8) {
+        return res.status(400).json({ error: 'password_too_short' });
+    }
         try {
-            // Hashage du mot de passe.
-            temp.password = await bcrypt.hash(temp.password, 10);
             let user = await User.create(temp);
 
             //Ne pas renvoyer le mot de passe
@@ -100,18 +102,22 @@ exports.add = async (req, res, next) => {
 exports.update = async (req, res, next) => {
     const email = req.params.email;
 
-    const temp = {
-        username   : req.body.username,
-        email      : req.body.email,
-        password   : req.body.password 
-    };
-    
-    try {  
-        if (temp.password) {
-            temp.password = await bcrypt.hash(temp.password, 10)
-        };
+    try {
+        let user = await User.findOne({ email });
 
-        let user = await User.findOne ({ email });
+    if (!temp.password || temp.password.length < 8) {
+  return res.status(400).json({ error: 'password_too_short' });
+}
+
+    if (!user) {
+        return res.status(404).json({ error: 'user_not_found' });
+    }
+
+    // Met à jour les champs uniquement si présents dans req.body
+    if (req.body.username) user.username = req.body.username;
+    if (req.body.email) user.email = req.body.email;
+    if (req.body.password) user.password = req.body.password;
+
 
         if (user) {
             Object.keys(temp).forEach((key) => {
