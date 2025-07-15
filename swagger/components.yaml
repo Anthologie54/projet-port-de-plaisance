@@ -1,0 +1,69 @@
+components:
+  schemas:
+    Catway:
+      type: object
+      required:
+        - catwayNumber
+        - catwayType
+        - catwayState
+      properties:
+        catwayNumber:
+          type: string
+          description: Numéro unique du catway
+        catwayType:
+          type: string
+          enum: [long, short]
+          description: Type du catway
+        catwayState:
+          type: string
+          description: État du catway
+      example:
+        catwayNumber: "C12"
+        catwayType: "long"
+        catwayState: "Disponible"
+
+    Reservation:
+      type: object
+      required:
+        - catwayNumber
+        - clientName
+        - boatName
+        - startDate
+        - endDate
+      properties:
+        catwayNumber:
+          type: string
+        clientName:
+          type: string
+        boatName:
+          type: string
+        startDate:
+          type: string
+          format: date
+        endDate:
+          type: string
+          format: date
+      example:
+        catwayNumber: "C12"
+        clientName: "Alex"
+        boatName: "Le Corsaire"
+        startDate: "2025-07-15"
+        endDate: "2025-07-18"
+
+    User:
+      type: object
+      required:
+        - username
+        - email
+        - password
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+      example:
+        username: "alexandre"
+        email: "alex@example.com"
+        password: "securePassword123"
