@@ -22,7 +22,7 @@ router.get('/:email', checkJWT, controller.getByEmail);
  * @description Crée un nouvel utilisateur
  * @access Protégée
  */
-router.post('/', checkJWT, controller.add);
+router.post('/', controller.add);
 
 /**
  * @route PUT /users/:email
