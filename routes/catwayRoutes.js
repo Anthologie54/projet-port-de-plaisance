@@ -5,37 +5,130 @@ const reservationRoutes = require('./reservationRoutes');
 const { checkJWT } = require('../middlewares/authMiddleware');
 
 /**
- * @route GET /catways
- * @description Récupère tous les catways
- * @access Public
+ * @swagger
+ * tags:
+ *   name: Catways
+ *   description: Opérations CRUD pour les catways
+ */
+/**
+ * @swagger
+ * /catways:
+ *   get:
+ *     summary: Récupère tous les catways
+ *     tags: [Catways]
+ *     responses:
+ *       200:
+ *         description: Liste de tous les catways
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Catway'
  */
 router.get('/', controller.getAll);
 
 /**
- * @route GET /catways/:id
- * @description Récupère un catway par son ID
- * @access Public
+ * @swagger
+ * /catways/{id}:
+ *   get:
+ *     summary: Récupère un catway par son numéro
+ *     tags: [Catways]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Numéro du catway
+ *     responses:
+ *       200:
+ *         description: Catway trouvé
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Catway'
+ *       404:
+ *         description: Catway non trouvé
  */
 router.get('/:id', controller.getById);
 
 /**
- * @route POST /catways
- * @description Crée un catway
- * @access Protégée
+ * @swagger
+ * /catways:
+ *   post:
+ *     summary: Crée un nouveau catway
+ *     tags: [Catways]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Catway'
+ *     responses:
+ *       201:
+ *         description: Catway créé
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Catway'
+ *       400:
+ *         description: Données invalides
+ *       409:
+ *         description: Catway déjà existant
  */
 router.post('/', checkJWT, controller.add);
 
 /**
- * @route PUT /catways/:id
- * @description Met à jour l'état d'un catway
- * @access Protégée
+ * @swagger
+ * /catways:
+ *   post:
+ *     summary: Crée un nouveau catway
+ *     tags: [Catways]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Catway'
+ *     responses:
+ *       201:
+ *         description: Catway créé
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Catway'
+ *       400:
+ *         description: Données invalides
+ *       409:
+ *         description: Catway déjà existant
  */
 router.put('/:id', checkJWT, controller.update);
 
 /**
- * @route DELETE /catways/:id
- * @description Supprime un catway
- * @access Protégée
+ * @swagger
+ * /catways/{id}:
+ *   delete:
+ *     summary: Supprime un catway
+ *     tags: [Catways]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Numéro du catway
+ *     responses:
+ *       200:
+ *         description: Catway supprimé
+ *       404:
+ *         description: Catway non trouvé
  */
 router.delete('/:id', checkJWT, controller.delete);
 

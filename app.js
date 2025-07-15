@@ -16,12 +16,15 @@ const createError  = require('http-errors');
 const indexRouter  = require('./routes/index');
 const authRoutes   = require('./routes/authRoutes');
 const { initClientDbConnection } = require('./config/mongo');
+const { swaggerUi, specs } = require('./swagger/swagger');
 
 // Initialise la connexion à MongoDB (log dans la console si succès ou erreur)
 initClientDbConnection();
 
 // Crée l'application Express
 const app = express();
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 // Définit le dossier public (pour fichiers statiques : CSS, JS, images)
 app.use(express.static(path.join(__dirname, 'public')));
