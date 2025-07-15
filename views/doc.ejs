@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Documentation de l'API - Port Russell</title>
+</head>
+<body>
+    <h1>Documentation de l'API Port Russell</h1>
+
+    <h2>Authentification</h2>
+    <ul>
+        <li><strong>POST /auth/login</strong> : Se connecter et recevoir un token JWT</li>
+        <li><strong>GET /auth/logout</strong> : Se déconnecter</li>
+    </ul>
+
+    <h2>Utilisateurs</h2>
+    <ul>
+        <li>GET /users : Liste tous les utilisateurs</li>
+        <li>GET /users/:email : Détail d’un utilisateur</li>
+        <li>POST /users : Créer un utilisateur</li>
+        <li>PUT /users/:email : Modifier un utilisateur</li>
+        <li>DELETE /users/:email : Supprimer un utilisateur</li>
+    </ul>
+
+    <h2>Catways</h2>
+    <ul>
+        <li>GET /catways : Tous les catways</li>
+        <li>GET /catways/:id : Détail d’un catway</li>
+        <li>POST /catways : Créer un catway</li>
+        <li>PUT /catways/:id : Modifier l’état d’un catway</li>
+        <li>DELETE /catways/:id : Supprimer un catway</li>
+    </ul>
+
+    <h2>Réservations</h2>
+    <ul>
+        <li>GET /catways/:id/reservations : Toutes les réservations d’un catway</li>
+        <li>GET /catways/:id/reservations/:idReservation : Détail d’une réservation</li>
+        <li>POST /catways/:id/reservations : Créer une réservation</li>
+        <li>PUT /catways/:id/reservations/:idReservation : Modifier une réservation</li>
+        <li>DELETE /catways/:id/reservations/:idReservation : Supprimer une réservation</li>
+    </ul>
+
+    <h2>Note</h2>
+    <p>Certaines routes sont protégées : pensez à ajouter le header <code>Authorization: Bearer &lt;token&gt;</code> obtenu après connexion.</p>
+
+    <p><a href="/">Retour au menu de connection</a></p>
+</body>
+</html>
