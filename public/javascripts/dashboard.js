@@ -1,4 +1,4 @@
-console.log('main.js chargé');
+console.log('dashboard chargé');
 const token = localStorage.getItem('token');
 
 function setupEventListeners() {
@@ -6,7 +6,7 @@ function setupEventListeners() {
     loadCatways(token);
   });
   document.getElementById('btnReservations').addEventListener('click', () => {
-    loadReservations();
+    loadAllReservations();
   });
   document.getElementById('btnUsers').addEventListener('click', () => {
     loadUsers();

@@ -22,7 +22,7 @@ async function loadAllReservations() {
     const content = document.getElementById('content');
     content.innerHTML = `
       <h3>Liste de toutes les réservations</h3>
-      <button class="btn btn-success mb-3" id="addReservationBtn">➕ Ajouter une réservation</button>
+      <button class="btn btn-success mb-3" id="addReservationBtn">Ajouter une réservation</button>
     `;
 
     if (!reservations.length) {
@@ -100,14 +100,18 @@ async function showReservationForm(catwayNumber = null, reservation = null) {
   const content = document.getElementById('content');
 
   // Récupérer tous les catways pour la liste déroulante
+    
   let catways = [];
+  let filteredCatways = [];
   try {
     const resCatways = await fetch('/catways', { headers: { Authorization: token } });
     if (resCatways.ok) {
       catways = await resCatways.json();
+      filteredCatways = catways.filter(c => c.status === 'Libre');
+      filteredCatways.sort((a,b) => b.catwayNumber - a.catwayNumber);
     }
   } catch {
-    // en cas d'erreur on laisse la liste vide
+  //si il y a une erreur ma liste reste vide
   }
 
   content.innerHTML = `
@@ -117,7 +121,7 @@ async function showReservationForm(catwayNumber = null, reservation = null) {
         <label for="catwayNumber" class="form-label">Catway</label>
         <select id="catwayNumber" class="form-select" ${isEdit ? 'disabled' : ''} required>
           <option value="">Sélectionner un catway</option>
-          ${catways.map(c => `
+          ${filteredCatways.map(c => `
             <option value="${c.catwayNumber}" ${((catwayNumber ?? (reservation ? reservation.catwayNumber : null)) == c.catwayNumber) ? 'selected' : ''}>
               ${c.catwayNumber} (${c.catwayType})
             </option>`).join('')}
