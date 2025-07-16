@@ -2,11 +2,18 @@ const User = require('../models/User');
 const bcrypt = require('bcrypt');
 
 /**
- * Récupère la liste de tous les utilisateurs sans leurs mots de passe.
- * @param {Object} req - Objet requête Express.
- * @param {Object} res - Objet réponse Express.
- * @param {Function} next - Middleware suivant.
- * @returns {JSON} Liste des utilisateurs ou erreur 500.
+ * @function getAll
+ * @description
+ * Récupère la liste de tous les utilisateurs en excluant leurs mots de passe.
+ * 
+ * @async
+ * @route GET /users
+ * @param {import('express').Request} req - Objet requête Express.
+ * @param {import('express').Response} res - Objet réponse Express.
+ * @param {import('express').NextFunction} next - Middleware suivant.
+ * 
+ * @returns {Promise<void>} Code 200 avec tableau des utilisateurs sans mot de passe,
+ * ou code 500 en cas d’erreur serveur.
  */
 exports.getAll = async (req, res, next) => {
   try {
@@ -18,12 +25,19 @@ exports.getAll = async (req, res, next) => {
 };
 
 /**
- * Récupère un utilisateur par email sans le mot de passe.
- * @param {Object} req - Objet requête Express.
- * @param {string} req.params.email - Email à rechercher.
- * @param {Object} res - Objet réponse Express.
- * @param {Function} next - Middleware suivant.
- * @returns {JSON} Utilisateur trouvé ou erreur.
+ * @function getByEmail
+ * @description
+ * Récupère un utilisateur par email en excluant le mot de passe.
+ * Renvoie 404 si utilisateur introuvable.
+ * 
+ * @async
+ * @route GET /users/:email
+ * @param {import('express').Request} req - Objet requête Express (req.params.email = email recherché).
+ * @param {import('express').Response} res - Objet réponse Express.
+ * @param {import('express').NextFunction} next - Middleware suivant.
+ * 
+ * @returns {Promise<void>} Code 200 avec utilisateur trouvé, 404 si non trouvé,
+ * ou 500 en cas d’erreur serveur.
  */
 exports.getByEmail = async (req, res, next) => {
   try {
@@ -36,14 +50,22 @@ exports.getByEmail = async (req, res, next) => {
 };
 
 /**
- * Crée un nouvel utilisateur (vérifie longueur du mot de passe).
- * @param {Object} req - Objet requête Express.
- * @param {string} req.body.username - Nom d'utilisateur.
- * @param {string} req.body.email - Email unique.
- * @param {string} req.body.password - Mot de passe.
- * @param {Object} res - Objet réponse Express.
- * @param {Function} next - Middleware suivant.
- * @returns {JSON} Utilisateur créé ou erreur.
+ * @function add
+ * @description
+ * Crée un nouvel utilisateur avec les données du corps de la requête.
+ * Vérifie que le mot de passe a au moins 8 caractères.
+ * Renvoie 409 si l’email est déjà utilisé.
+ * 
+ * @async
+ * @route POST /users
+ * @param {import('express').Request} req - Objet requête Express (req.body contient username, email, password).
+ * @param {import('express').Response} res - Objet réponse Express.
+ * @param {import('express').NextFunction} next - Middleware suivant.
+ * 
+ * @returns {Promise<void>} Code 201 avec utilisateur créé (sans mot de passe),
+ * 400 si mot de passe trop court,
+ * 409 si email déjà utilisé,
+ * ou 500 en cas d’erreur serveur.
  */
 exports.add = async (req, res, next) => {
   const temp = {
@@ -70,14 +92,23 @@ exports.add = async (req, res, next) => {
 };
 
 /**
- * Met à jour un utilisateur par email.
- * Vérifie si un nouveau mot de passe est trop court.
- * @param {Object} req - Objet requête Express.
- * @param {string} req.params.email - Email ciblé.
- * @param {Object} req.body - Champs à modifier.
- * @param {Object} res - Objet réponse Express.
- * @param {Function} next - Middleware suivant.
- * @returns {JSON} Utilisateur modifié ou erreur.
+ * @function update
+ * @description
+ * Met à jour un utilisateur identifié par email.
+ * Vérifie que le nouveau mot de passe (si présent) a au moins 8 caractères.
+ * Met à jour uniquement les champs fournis (username, email, password).
+ * Renvoie 404 si utilisateur non trouvé.
+ * 
+ * @async
+ * @route PUT /users/:email
+ * @param {import('express').Request} req - Objet requête Express (req.params.email = email ciblé, req.body = champs à modifier).
+ * @param {import('express').Response} res - Objet réponse Express.
+ * @param {import('express').NextFunction} next - Middleware suivant.
+ * 
+ * @returns {Promise<void>} Code 200 avec utilisateur mis à jour (sans mot de passe),
+ * 400 si mot de passe trop court,
+ * 404 si utilisateur non trouvé,
+ * ou 500 en cas d’erreur serveur.
  */
 exports.update = async (req, res, next) => {
   try {
@@ -106,12 +137,18 @@ exports.update = async (req, res, next) => {
 };
 
 /**
- * Supprime un utilisateur par email.
- * @param {Object} req - Objet requête Express.
- * @param {string} req.params.email - Email ciblé.
- * @param {Object} res - Objet réponse Express.
- * @param {Function} next - Middleware suivant.
- * @returns {JSON} Message de succès ou erreur.
+ * @function delete
+ * @description
+ * Supprime un utilisateur identifié par email.
+ * 
+ * @async
+ * @route DELETE /users/:email
+ * @param {import('express').Request} req - Objet requête Express (req.params.email = email ciblé).
+ * @param {import('express').Response} res - Objet réponse Express.
+ * @param {import('express').NextFunction} next - Middleware suivant.
+ * 
+ * @returns {Promise<void>} Code 200 avec message de succès,
+ * ou 500 en cas d’erreur serveur.
  */
 exports.delete = async (req, res, next) => {
   try {

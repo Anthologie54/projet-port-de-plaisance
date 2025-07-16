@@ -10,7 +10,7 @@ const CatwaySchema = new Schema({
     type: Number,
     unique: true,
     required: [true, 'Le numéro du Catway est requis'],
-    min: [1, 'Le numéro du catway doit être supérieur à 0'] // numéro positif
+    min: [1, 'Le numéro du catway doit être supérieur à 0'] 
   },
   catwayType: {
     type: String,

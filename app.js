@@ -17,6 +17,8 @@ const indexRouter  = require('./routes/index');
 const authRoutes   = require('./routes/authRoutes');
 const { initClientDbConnection } = require('./config/mongo');
 const { swaggerUi, specs } = require('./swagger/swagger');
+const reservationRoutes = require('./routes/reservationRoutes');
+const reservationsGlobalRouter = require('./routes/reservationsGlobal');
 
 // Initialise la connexion à MongoDB (log dans la console si succès ou erreur)
 initClientDbConnection();
@@ -29,15 +31,15 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 // Définit le dossier public (pour fichiers statiques : CSS, JS, images)
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Active CORS pour toutes les origines (exemple simple)
-// Expose en plus le header Authorization pour le front (token JWT)
+// Active CORS pour toutes les origines
 app.use(cors({
   exposedHeaders: ['Authorization'],
   origin: '*'
 }));
 
-// Logger HTTP des requêtes (dev: coloré et pratique en dev)
+// Logger HTTP des requêtes
 app.use(logger('dev'));
+
 
 // Parse automatiquement JSON et URL-encoded (formulaires)
 app.use(express.json());
@@ -48,6 +50,9 @@ app.use(cookieParser());
 
 // Routes d'authentification
 app.use('/auth', authRoutes);
+
+// Routes globales des réservations (TOUTES réservations)
+app.use('/reservations', reservationsGlobalRouter);
 
 // Routes principales (page d'accueil, catways, users, reservations)
 app.use('/', indexRouter);

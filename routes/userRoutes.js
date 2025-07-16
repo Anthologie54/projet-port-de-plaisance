@@ -10,6 +10,7 @@ const router = express.Router();
 const controller = require('../controllers/userController');
 const { checkJWT } = require('../middlewares/authMiddleware');
 
+const { validateEmail, validatePassword } = require('../middlewares/validation');
 /**
  * @swagger
  * /users:
@@ -71,7 +72,7 @@ router.get('/:email', checkJWT, controller.getByEmail);
  *       201:
  *         description: Utilisateur créé
  */
-router.post('/', controller.add);
+router.post('/', validateEmail, validatePassword, controller.add);
 
 /**
  * @swagger
@@ -104,7 +105,7 @@ router.post('/', controller.add);
  *       200:
  *         description: Utilisateur mis à jour
  */
- router.put('/:email', checkJWT, controller.update);
+ router.put('/:email', checkJWT, validatePassword, controller.update);
 
 /**
  * @swagger

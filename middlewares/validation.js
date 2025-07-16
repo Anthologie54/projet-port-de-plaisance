@@ -1,5 +1,14 @@
 /**
- * Middleware pour valider le format de l'email.
+ * @function validateEmail
+ * @description
+ * Middleware pour vérifier que le champ email du corps de la requête est présent et a un format valide.
+ * Si le format est incorrect ou manquant, renvoie une erreur 400.
+ * 
+ * @param {import('express').Request} req - Objet requête Express (req.body.email).
+ * @param {import('express').Response} res - Objet réponse Express.
+ * @param {import('express').NextFunction} next - Middleware suivant.
+ * 
+ * @returns {void} Passe au middleware suivant ou renvoie code 400 avec message « invalid_email_format ».
  */
 exports.validateEmail = (req, res, next) => {
   const email = req.body.email;
@@ -12,8 +21,19 @@ exports.validateEmail = (req, res, next) => {
 };
 
 /**
- * Middleware pour valider la longueur minimale du mot de passe.
+ * @function validatePassword
+ * @description
+ * Middleware pour vérifier que le champ password du corps de la requête est présent
+ * et contient au moins 8 caractères.
+ * Si manquant ou trop court, renvoie une erreur 400.
+ * 
+ * @param {import('express').Request} req - Objet requête Express (req.body.password).
+ * @param {import('express').Response} res - Objet réponse Express.
+ * @param {import('express').NextFunction} next - Middleware suivant.
+ * 
+ * @returns {void} Passe au middleware suivant ou renvoie code 400 avec message « password_too_short ».
  */
+
 exports.validatePassword = (req, res, next) => {
   const password = req.body.password;
 
@@ -23,9 +43,21 @@ exports.validatePassword = (req, res, next) => {
   next();
 };
 
+
 /**
- * Middleware pour valider le type de catway (doit être "long" ou "short").
+ * @function validateCatwayType
+ * @description
+ * Middleware pour vérifier que le champ catwayType du corps de la requête est présent
+ * et vaut « long » ou « short ».
+ * Si manquant ou invalide, renvoie une erreur 400.
+ * 
+ * @param {import('express').Request} req - Objet requête Express (req.body.catwayType).
+ * @param {import('express').Response} res - Objet réponse Express.
+ * @param {import('express').NextFunction} next - Middleware suivant.
+ * 
+ * @returns {void} Passe au middleware suivant ou renvoie code 400 avec message « invalid_catway_type ».
  */
+
 exports.validateCatwayType = (req, res, next) => {
   const type = req.body.catwayType;
 
@@ -36,12 +68,22 @@ exports.validateCatwayType = (req, res, next) => {
 };
 
 /**
- * Middleware pour valider que la date de début précède la date de fin.
+ * @function validateReservationDates
+ * @description
+ * Middleware pour vérifier que les dates de début et de fin d’une réservation sont présentes
+ * et que startDate précède strictement endDate.
+ * Si invalide ou manquant, renvoie une erreur 400.
+ * 
+ * @param {import('express').Request} req - Objet requête Express (req.body.startDate et req.body.endDate).
+ * @param {import('express').Response} res - Objet réponse Express.
+ * @param {import('express').NextFunction} next - Middleware suivant.
+ * 
+ * @returns {void} Passe au middleware suivant ou renvoie code 400 avec message « invalid_reservation_dates ».
  */
 exports.validateReservationDates = (req, res, next) => {
   const { startDate, endDate } = req.body;
 
-  if (!startDate || !endDate || new Date(startDate) >= new Date(endDate)) {
+  if (!startDate || !endDate || isNaN(new Date(startDate)) || isNaN(new Date(endDate)) || new Date(startDate) >= new Date(endDate)) {
     return res.status(400).json({ error: 'invalid_reservation_dates' });
   }
   next();
