@@ -2,9 +2,6 @@
  * reservations.js
  * Gère les opérations CRUD des réservations côté front.
  */
-
-console.log('reservations.js chargé');
-
 /**
  * Charge et affiche la liste de toutes les réservations.
  */
@@ -100,7 +97,7 @@ async function showReservationForm(catwayNumber = null, reservation = null) {
   const content = document.getElementById('content');
 
   // Récupérer tous les catways pour la liste déroulante
-    
+
   let catways = [];
   let filteredCatways = [];
   try {
@@ -108,10 +105,16 @@ async function showReservationForm(catwayNumber = null, reservation = null) {
     if (resCatways.ok) {
       catways = await resCatways.json();
       filteredCatways = catways.filter(c => c.status === 'Libre');
-      filteredCatways.sort((a,b) => b.catwayNumber - a.catwayNumber);
+      if (isEdit && !filteredCatways.find(c => c.catwayNumber == reservation.catwayNumber)) {
+        const usedCatway = catways.find(c => c.catwayNumber == reservation.catwayNumber);
+        if (usedCatway) filteredCatways.push(usedCatway);
+      }
+      filteredCatways.sort((a, b) => b.catwayNumber - a.catwayNumber);
     }
+
+
   } catch {
-  //si il y a une erreur ma liste reste vide
+    //si il y a une erreur ma liste reste vide
   }
 
   content.innerHTML = `
@@ -119,7 +122,7 @@ async function showReservationForm(catwayNumber = null, reservation = null) {
     <form id="reservationForm" class="mb-3">
       <div class="mb-3">
         <label for="catwayNumber" class="form-label">Catway</label>
-        <select id="catwayNumber" class="form-select" ${isEdit ? 'disabled' : ''} required>
+        <select id="catwayNumber" class="form-select" required>
           <option value="">Sélectionner un catway</option>
           ${filteredCatways.map(c => `
             <option value="${c.catwayNumber}" ${((catwayNumber ?? (reservation ? reservation.catwayNumber : null)) == c.catwayNumber) ? 'selected' : ''}>
@@ -129,7 +132,7 @@ async function showReservationForm(catwayNumber = null, reservation = null) {
       </div>
       <div class="mb-3">
         <label for="boatName" class="form-label">Nom du bateau</label>
-        <input type="text" id="boatName" class="form-control" value="${isEdit ? reservation.boatName : ''}" required />
+        <input type="text" id="boatName" class="form-control" value="${isEdit ? reservation.boatName : ''}" required/>
       </div>
       <div class="mb-3">
         <label for="clientName" class="form-label">Nom du client</label>
@@ -168,12 +171,7 @@ async function showReservationForm(catwayNumber = null, reservation = null) {
     const method = isEdit ? 'PUT' : 'POST';
 
     try {
-      const res = await fetch(url, {
-        method,
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: token
-        },
+      const res = await fetch(url, {method,headers: {'Content-Type': 'application/json',Authorization: token},
         body: JSON.stringify({ boatName, clientName, startDate, endDate })
       });
       if (!res.ok) {

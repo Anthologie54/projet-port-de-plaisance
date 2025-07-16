@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const controller = require('../controllers/catwayController');
+const { validateCatwayType } = require('../middlewares/validation');
 const reservationRoutes = require('./reservationRoutes');
 const { checkJWT } = require('../middlewares/authMiddleware');
 
@@ -79,7 +80,7 @@ router.get('/:id', controller.getById);
  *       409:
  *         description: Catway déjà existant
  */
-router.post('/', checkJWT, controller.add);
+router.post('/', checkJWT, validateCatwayType, controller.add);
 
 /**
  * @swagger
@@ -107,7 +108,7 @@ router.post('/', checkJWT, controller.add);
  *       409:
  *         description: Catway déjà existant
  */
-router.put('/:id', checkJWT, controller.update);
+router.put('/:id', checkJWT, validateCatwayType, controller.update);
 
 /**
  * @swagger

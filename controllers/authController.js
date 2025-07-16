@@ -5,13 +5,24 @@ const jwt = require('jsonwebtoken');
 const SECRET_KEY = process.env.SECRET_KEY;
 
 /**
- * Connecte un utilisateur et renvoie un JWT.
- * @param {Object} req - Objet requête Express.
- * @param {string} req.body.email - Email.
- * @param {string} req.body.password - Mot de passe.
- * @param {Object} res - Objet réponse Express.
- * @param {Function} next - Middleware suivant.
- * @returns {JSON} Token et données utilisateur ou erreur.
+ * @function login
+ * @description
+ * Authentifie un utilisateur avec son email et son mot de passe.
+ * Si l'authentification réussit, génère et renvoie un JWT (JSON Web Token) valable 24h,
+ * ainsi que les données publiques de l'utilisateur.
+ * 
+ * @async
+ * @route POST /login
+ * @param {import('express').Request} req - Objet requête Express (req.body.email et req.body.password sont requis).
+ * @param {import('express').Response} res - Objet réponse Express.
+ * @param {import('express').NextFunction} next - Middleware suivant.
+ * 
+ * @returns {Promise<void>} 
+ * - En cas de succès, code 200 avec message, token JWT (préfixé "Bearer ") et données utilisateur.
+ * - Code 400 si email ou mot de passe manquant.
+ * - Code 404 si utilisateur non trouvé.
+ * - Code 403 si mot de passe incorrect.
+ * - Code 500 en cas d’erreur serveur.
  */
 exports.login = async (req, res, next) => {
   const { email, password } = req.body;
@@ -41,11 +52,19 @@ exports.login = async (req, res, next) => {
 };
 
 /**
- * Déconnecte l'utilisateur.
- * @param {Object} req - Objet requête Express.
- * @param {Object} res - Objet réponse Express.
- * @param {Function} next - Middleware suivant.
- * @returns {JSON} Message de succès.
+ * @function logout
+ * @description
+ * Déconnecte un utilisateur.  
+ * Note : Ici la déconnexion côté serveur ne nécessite pas d’action particulière
+ * car le JWT est stateless. C’est plutôt côté client que le token est supprimé.
+ * 
+ * @async
+ * @route POST /logout
+ * @param {import('express').Request} req - Objet requête Express.
+ * @param {import('express').Response} res - Objet réponse Express.
+ * @param {import('express').NextFunction} next - Middleware suivant.
+ * 
+ * @returns {Promise<void>} Code 200 avec message de succès.
  */
 exports.logout = async (req, res, next) => {
   return res.status(200).json({ message: 'logout_success' });

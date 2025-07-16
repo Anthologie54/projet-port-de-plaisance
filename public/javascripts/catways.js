@@ -2,9 +2,6 @@
  * catways.js
  * Gère l'affichage, la création, modification et suppression des catways côté front.
  */
-
-console.log('catways.js chargé');
-
 // La variable token est globale (récupérée dans dashboard.js ou ailleurs)
 
 async function loadCatways() {
@@ -40,7 +37,7 @@ async function loadCatways() {
           <p class="card-text"><strong>Statut :</strong> ${catway.status || 'Libre'}</p>
           <button class="btn btn-primary btn-sm me-2" onclick='showCatwayForm(${JSON.stringify(catway)})'>Modifier</button>
           <button class="btn btn-danger btn-sm me-2" onclick='deleteCatway(${catway.catwayNumber})'>Supprimer</button>
-          <button class="btn btn-secondary btn-sm" onclick='loadReservations(${catway.catwayNumber})'>Voir réservations</button>
+          <button class="btn btn-secondary btn-sm" onclick='loadAllReservations(${catway.catwayNumber})'>Voir réservations</button>
         </div>
       `;
       content.appendChild(card);
