@@ -17,6 +17,7 @@ const indexRouter  = require('./routes/index');
 const authRoutes   = require('./routes/authRoutes');
 const { initClientDbConnection } = require('./config/mongo');
 const { swaggerUi, specs } = require('./swagger/swagger');
+const reservationGlobalRoutes = require('./routes/reservationGlobalRoutes');
 
 // Initialise la connexion à MongoDB (log dans la console si succès ou erreur)
 initClientDbConnection();
@@ -48,6 +49,9 @@ app.use(cookieParser());
 
 // Routes d'authentification
 app.use('/auth', authRoutes);
+
+// Routes globales des réservations (TOUTES réservations)
+app.use('/reservations', reservationGlobalRoutes);
 
 // Routes principales (page d'accueil, catways, users, reservations)
 app.use('/', indexRouter);

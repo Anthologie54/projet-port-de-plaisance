@@ -1,73 +1,31 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>Tableau de bord - Port Russell</title>
+  <meta charset="UTF-8" />
+  <title>Tableau de bord</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
 </head>
-<body>
-  <h1>Tableau de bord</h1>
-  <p>Bienvenue sur votre tableau de bord !</p>
+<body class="bg-light">
 
-  <h2>Catways</h2>
-  <ul id="catways-list"></ul>
+<div class="container mt-5">
+  <h1>📊 Tableau de bord</h1>
 
-  <h2>Utilisateurs</h2>
-  <ul id="users-list"></ul>
+<div class="mb-4">
+  <button id="btnCatways" class="btn btn-primary me-2">Voir les catways</button>
+  <button id="btnReservations" class="btn btn-primary me-2">Voir les réservations</button>
+  <button id="btnUsers" class="btn btn-primary me-2">Voir les utilisateurs</button>
+  <button id="btnLogout" class="btn btn-danger">Se déconnecter</button>
+</div>
 
-  <script>
-    // Récupérer le token depuis localStorage (qu’on a stocké après login)
-    const token = localStorage.getItem('token');
+  <div id="content" class="bg-white p-3 rounded shadow-sm" style="min-height: 300px; overflow-y: auto;">
+    <p>Bienvenue sur le tableau de bord du port de plaisance Russell.</p>
+  </div>
+</div>
 
-    // Fetch et affichage des catways + réservations
-    fetch('/catways', {
-      headers: { 'Authorization': token }
-    })
-    .then(res => res.json())
-    .then(catways => {
-      const ul = document.getElementById('catways-list');
-      catways.forEach(catway => {
-        // Crée un li avec les infos du catway
-        const li = document.createElement('li');
-        li.innerHTML = `<strong>#${catway.catwayNumber}</strong> - Type: ${catway.catwayType} - État: ${catway.catwayState}`;
+<script src="/javascripts/catways.js"></script>
+<script src="/javascripts/reservations.js"></script>
+<script src="/javascripts/users.js"></script>
+<script src="/javascripts/dashboard.js"></script>
 
-        // Conteneur pour les réservations
-        const resList = document.createElement('ul');
-
-        // Fetch des réservations pour ce catway
-        fetch(`/catways/${catway._id}/reservations`, {
-          headers: { 'Authorization': token }
-        })
-        .then(res => res.json())
-        .then(reservations => {
-          reservations.forEach(r => {
-            const rLi = document.createElement('li');
-            rLi.textContent = `${r.clientName} - ${r.boatName} (${new Date(r.startDate).toLocaleDateString()} → ${new Date(r.endDate).toLocaleDateString()})`;
-            resList.appendChild(rLi);
-          });
-        })
-        .catch(err => console.error('Erreur reservations:', err));
-
-        li.appendChild(resList);
-        ul.appendChild(li);
-      });
-    })
-    .catch(err => console.error('Erreur catways:', err));
-
-
-    // Fetch et affichage des users
-    fetch('/users', {
-      headers: { 'Authorization': token }
-    })
-    .then(res => res.json())
-    .then(users => {
-      const ul = document.getElementById('users-list');
-      users.forEach(user => {
-        const li = document.createElement('li');
-        li.textContent = `${user.username} - ${user.email}`;
-        ul.appendChild(li);
-      });
-    })
-    .catch(err => console.error('Erreur users:', err));
-  </script>
 </body>
 </html>

@@ -1,18 +1,46 @@
 const Catway = require('../models/Catway');
+const Reservation = require('../models/Reservation'); // modèle Reservation à importer
 
 /**
- * Récupère la liste de tous les catways.
+ * Récupère la liste de tous les catways avec leur statut réservation.
  */
 exports.getAll = async (req, res, next) => {
   try {
     const catways = await Catway.find();
-    return res.status(200).json(catways);
+
+    // On récupère pour chaque catway la réservation la plus récente (endDate la plus tardive)
+    const catwaysWithStatus = await Promise.all(
+      catways.map(async (catway) => {
+        // Recherche de la dernière réservation pour ce catway
+        const lastReservation = await Reservation.findOne({ catwayNumber: catway.catwayNumber })
+          .sort({ endDate: -1 }) // tri décroissant sur endDate
+          .exec();
+
+        let status;
+        if (!lastReservation) {
+          status = 'Libre';
+        } else {
+          // Format de la date au format français
+          const dateStr = lastReservation.endDate.toLocaleDateString('fr-FR');
+          status = `Occupé jusqu'au : ${dateStr}`;
+        }
+
+        return {
+          _id: catway._id,
+          catwayNumber: catway.catwayNumber,
+          catwayType: catway.catwayType,
+          catwayState: catway.catwayState,
+          status,
+        };
+      })
+    );
+
+    return res.status(200).json(catwaysWithStatus);
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: error.message });
   }
 };
-
 /**
  * Récupère un catway par son ID.
  */

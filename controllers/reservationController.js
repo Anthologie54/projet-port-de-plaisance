@@ -6,7 +6,7 @@ const Catway = require('../models/Catway');
  */
 exports.getAll = async (req, res, next) => {
     try {
-        const catway = await Catway.findOne({ catwayNumber: req.params.id });
+        const catway = await Catway.findOne({ catwayNumber: Number(req.params.id) });
         if (!catway) {
             return res.status(404).json({ error: 'catway_not_found' });
         }
@@ -23,7 +23,7 @@ exports.getAll = async (req, res, next) => {
  */
 exports.getById = async (req, res, next) => {
     try {
-        const catway = await Catway.findOne({ catwayNumber: req.params.id });
+        const catway = await Catway.findOne({ catwayNumber: Number(req.params.id) });
         if (!catway) {
             return res.status(404).json({ error: 'catway_not_found' });
         }
@@ -45,7 +45,7 @@ exports.getById = async (req, res, next) => {
  */
 exports.add = async (req, res, next) => {
     try {
-        const catway = await Catway.findOne({ catwayNumber: req.params.id });
+        const catway = await Catway.findOne({ catwayNumber: Number(req.params.id) });
         if (!catway) {
             return res.status(404).json({ error: 'catway_not_found' });
         }
@@ -68,7 +68,7 @@ exports.add = async (req, res, next) => {
  */
 exports.update = async (req, res, next) => {
     try {
-        const catway = await Catway.findOne({ catwayNumber: req.params.id });
+        const catway = await Catway.findOne({ catwayNumber: Number(req.params.id) });
         if (!catway) {
             return res.status(404).json({ error: 'catway_not_found' });
         }
@@ -96,7 +96,7 @@ exports.update = async (req, res, next) => {
  */
 exports.delete = async (req, res, next) => {
     try {
-        const catway = await Catway.findOne({ catwayNumber: req.params.id });
+        const catway = await Catway.findOne({ catwayNumber: Number(req.params.id) });
         if (!catway) {
             return res.status(404).json({ error: 'catway_not_found' });
         }
