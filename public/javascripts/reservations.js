@@ -1,8 +1,6 @@
 /**
  * reservations.js
  * Gère les opérations CRUD des réservations côté front.
- */
-/**
  * Charge et affiche la liste de toutes les réservations.
  */
 async function loadAllReservations() {
