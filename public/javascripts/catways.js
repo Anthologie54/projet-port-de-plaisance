@@ -17,7 +17,7 @@ async function loadCatways() {
 
     // Bouton pour ajouter un nouveau catway
     const addBtn = document.createElement('button');
-    addBtn.textContent = '➕ Ajouter un catway';
+    addBtn.textContent = ' Ajouter un catway';
     addBtn.className = 'btn btn-success mb-3';
     addBtn.onclick = () => showCatwayForm();
     content.appendChild(addBtn);

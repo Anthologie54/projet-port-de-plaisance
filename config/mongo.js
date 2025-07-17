@@ -25,9 +25,9 @@ const clientOptions = {
 exports.initClientDbConnection = async () => {
     try {
         await mongoose.connect(process.env.URL_MONGO, clientOptions);
-        console.log('Connected'); // Connexion réussie
+        console.log('Connected');
     } catch (error) {
-        console.error(error); // Log de l'erreur
-        throw error;          // Propage l'erreur pour gestion ailleurs
+        console.error(error); 
+        throw error;          
     }
 };

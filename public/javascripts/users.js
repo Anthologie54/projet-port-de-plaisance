@@ -27,7 +27,7 @@ async function loadUsers() {
       `;
       content.appendChild(card);
 
-      // Boutons
+      // Boutons pour modifier ou supprimé
       card.querySelector('.btn-edit').addEventListener('click', () => showUserForm(user.email));
       card.querySelector('.btn-delete').addEventListener('click', () => deleteUser(user.email));
     });
@@ -136,6 +136,3 @@ async function deleteUser(email) {
     alert(error.message);
   }
 }
-
-// Au chargement de la page
-loadUsers();
