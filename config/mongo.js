@@ -4,7 +4,11 @@
  */
 
 const mongoose = require('mongoose');
-
+console.log('URL_MONGO:', process.env.URL_MONGO);
+if (!process.env.URL_MONGO) {
+  console.error('❌ La variable d\'environnement URL_MONGO est vide ou non définie !');
+  process.exit(1);
+}
 // Log utile en dev pour vérifier que l'URL est bien chargée depuis .env
 console.log('URL_MONGO:', process.env.URL_MONGO);
 
